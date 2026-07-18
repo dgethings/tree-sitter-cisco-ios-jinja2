@@ -90,6 +90,30 @@
         {
           "type": "SYMBOL",
           "name": "router_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "route_map_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "class_map_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "policy_map_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "vlan_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "line_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "redundancy_section"
         }
       ]
     },
@@ -470,6 +494,60 @@
         {
           "type": "SYMBOL",
           "name": "output"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "route_map_kw"
+          },
+          "named": true,
+          "value": "value"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "class_map_kw"
+          },
+          "named": true,
+          "value": "value"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "policy_map_kw"
+          },
+          "named": true,
+          "value": "value"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "vlan_kw"
+          },
+          "named": true,
+          "value": "value"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "line_kw"
+          },
+          "named": true,
+          "value": "value"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "redundancy_kw"
+          },
+          "named": true,
+          "value": "value"
         }
       ]
     },
@@ -483,6 +561,30 @@
         {
           "type": "SYMBOL",
           "name": "router_header"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "route_map_header"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "class_map_header"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "policy_map_header"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "vlan_header"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "line_header"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "redundancy_header"
         }
       ]
     },
@@ -1251,6 +1353,479 @@
           }
         }
       ]
+    },
+    "route_map_kw": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "route-map"
+        }
+      }
+    },
+    "class_map_kw": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "class-map"
+        }
+      }
+    },
+    "policy_map_kw": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "policy-map"
+        }
+      }
+    },
+    "vlan_kw": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "vlan"
+        }
+      }
+    },
+    "line_kw": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "line"
+        }
+      }
+    },
+    "redundancy_kw": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "redundancy"
+        }
+      }
+    },
+    "route_map_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "route_map_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_nl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_body_item"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "eos"
+        }
+      ]
+    },
+    "route_map_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "route_map_kw"
+          },
+          {
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "value"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "output"
+                }
+              ]
+            }
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "FIELD",
+              "name": "arg",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_cmd_arg"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "class_map_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "class_map_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_nl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_body_item"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "eos"
+        }
+      ]
+    },
+    "class_map_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "class_map_kw"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "FIELD",
+                    "name": "match_type",
+                    "content": {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "value"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "output"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "FIELD",
+                    "name": "name",
+                    "content": {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "value"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "output"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "FIELD",
+                "name": "name",
+                "content": {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "value"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "output"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "policy_map_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "policy_map_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_nl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_body_item"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "eos"
+        }
+      ]
+    },
+    "policy_map_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "policy_map_kw"
+          },
+          {
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "value"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "output"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "vlan_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "vlan_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_nl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_body_item"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "eos"
+        }
+      ]
+    },
+    "vlan_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "vlan_kw"
+          },
+          {
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "value"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "output"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "line_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "line_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_nl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_body_item"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "eos"
+        }
+      ]
+    },
+    "line_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "line_kw"
+          },
+          {
+            "type": "FIELD",
+            "name": "type",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "value"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "output"
+                }
+              ]
+            }
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "FIELD",
+              "name": "arg",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "value"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "output"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "redundancy_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "redundancy_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_nl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_body_item"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "eos"
+        }
+      ]
+    },
+    "redundancy_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SYMBOL",
+        "name": "redundancy_kw"
+      }
     },
     "address_family_statement": {
       "type": "PREC_RIGHT",

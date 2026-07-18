@@ -1,0 +1,97 @@
+===
+policy-map section empty body
+===
+
+policy-map PM
+!
+
+---
+
+(config
+  (policy_map_section
+    (policy_map_header
+      (policy_map_kw)
+      name: (value))
+    (eos)))
+
+===
+policy-map section with class and QoS statements
+===
+
+policy-map PM
+ class class-default
+ police 1000000 20000
+ priority
+ drop
+!
+
+---
+
+(config
+  (policy_map_section
+    (policy_map_header
+      (policy_map_kw)
+      name: (value))
+    (class_statement
+      arg: (value))
+    (police_statement
+      arg: (value)
+      arg: (value))
+    (priority_statement)
+    (drop_statement)
+    (eos)))
+
+===
+policy-map section with random-detect
+===
+
+policy-map QOS
+ class VOICE
+  random-detect cos-based
+!
+
+---
+
+(config
+  (policy_map_section
+    (policy_map_header
+      (policy_map_kw)
+      name: (value))
+    (class_statement
+      arg: (value))
+    (random_detect_statement
+      arg: (value))
+    (eos)))
+
+===
+policy-map section negation (no policy-map)
+===
+
+no policy-map FOO
+!
+
+---
+
+(config
+  (negated_statement
+    (negation_keyword)
+    keyword: (policy_map_header
+      (policy_map_kw)
+      name: (value)))
+  (eos))
+
+===
+policy-map section with jinja name
+===
+
+policy-map {{ name }}
+!
+
+---
+
+(config
+  (policy_map_section
+    (policy_map_header
+      (policy_map_kw)
+      name: (output))
+    (eos)))

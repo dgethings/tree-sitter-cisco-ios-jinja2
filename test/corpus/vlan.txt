@@ -1,0 +1,117 @@
+===
+vlan section empty body
+===
+
+vlan 10
+!
+
+---
+
+(config
+  (vlan_section
+    (vlan_header
+      (vlan_kw)
+      name: (value))
+    (eos)))
+
+===
+vlan section with name and private-vlan
+===
+
+vlan 10
+ name MANAGEMENT
+ private-vlan primary
+!
+
+---
+
+(config
+  (vlan_section
+    (vlan_header
+      (vlan_kw)
+      name: (value))
+    (command_line
+      name: (identifier)
+      arg: (value))
+    (private_vlan_statement
+      arg: (value))
+    (eos)))
+
+===
+vlan section with remote-span
+===
+
+vlan 20
+ remote-span
+!
+
+---
+
+(config
+  (vlan_section
+    (vlan_header
+      (vlan_kw)
+      name: (value))
+    (remote_span_statement)
+    (eos)))
+
+===
+vlan section negation (no vlan)
+===
+
+no vlan 10
+!
+
+---
+
+(config
+  (negated_statement
+    (negation_keyword)
+    keyword: (vlan_header
+      (vlan_kw)
+      name: (value)))
+  (eos))
+
+===
+vlan as arg in switchport (regression guard)
+===
+
+interface GigabitEthernet0/0
+ switchport access vlan 10
+ switchport trunk allowed vlan 100,200
+!
+
+---
+
+(config
+  (interface_section
+    (interface_header
+      name: (interface_name))
+    (command_line
+      name: (identifier)
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (command_line
+      name: (identifier)
+      arg: (value)
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+vlan section with jinja name
+===
+
+vlan {{ id }}
+!
+
+---
+
+(config
+  (vlan_section
+    (vlan_header
+      (vlan_kw)
+      name: (output))
+    (eos)))

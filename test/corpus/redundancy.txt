@@ -1,0 +1,48 @@
+===
+redundancy section empty body
+===
+
+redundancy
+!
+
+---
+
+(config
+  (redundancy_section
+    (redundancy_header
+      (redundancy_kw))
+    (eos)))
+
+===
+redundancy section with auto-sync
+===
+
+redundancy
+ auto-sync running-config
+!
+
+---
+
+(config
+  (redundancy_section
+    (redundancy_header
+      (redundancy_kw))
+    (auto_sync_statement
+      arg: (value))
+    (eos)))
+
+===
+redundancy section negation (no redundancy)
+===
+
+no redundancy
+!
+
+---
+
+(config
+  (negated_statement
+    (negation_keyword)
+    keyword: (redundancy_header
+      (redundancy_kw)))
+  (eos))

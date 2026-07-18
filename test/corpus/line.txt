@@ -182,3 +182,107 @@ interface GigabitEthernet0/0
       arg: (value)
       arg: (value))
     (eos)))
+
+===
+line vty section with rich body
+===
+
+line vty 0 4
+ exec-timeout 5 0
+ login local
+ transport input ssh
+!
+
+---
+
+(config
+  (line_section
+    (line_header
+      (line_kw)
+      type: (value)
+      arg: (value)
+      arg: (value))
+    (exec_timeout_statement
+      arg: (value)
+      arg: (value))
+    (login_statement
+      arg: (value))
+    (transport_statement
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+line console section empty body
+===
+
+line console 0
+!
+
+---
+
+(config
+  (line_section
+    (line_header
+      (line_kw)
+      type: (value)
+      arg: (value))
+    (eos)))
+
+===
+line aux section with access-class
+===
+
+line aux 0
+ access-class 10 in
+!
+
+---
+
+(config
+  (line_section
+    (line_header
+      (line_kw)
+      type: (value)
+      arg: (value))
+    (access_class_statement
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+line section negation (no line)
+===
+
+no line vty 0 4
+!
+
+---
+
+(config
+  (negated_statement
+    (negation_keyword)
+    keyword: (line_header
+      (line_kw)
+      type: (value)
+      arg: (value)
+      arg: (value)))
+  (eos))
+
+===
+line section with jinja args
+===
+
+line vty {{ start }} {{ end }}
+!
+
+---
+
+(config
+  (line_section
+    (line_header
+      (line_kw)
+      type: (value)
+      arg: (output)
+      arg: (output))
+    (eos)))

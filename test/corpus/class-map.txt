@@ -1,0 +1,111 @@
+===
+class-map section with match-any
+===
+
+class-map match-any FOO
+ match ip address 10
+!
+
+---
+
+(config
+  (class_map_section
+    (class_map_header
+      (class_map_kw)
+      match_type: (value)
+      name: (value))
+    (match_statement
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+class-map section with match-all
+===
+
+class-map match-all BAR
+ match any
+!
+
+---
+
+(config
+  (class_map_section
+    (class_map_header
+      (class_map_kw)
+      match_type: (value)
+      name: (value))
+    (match_statement
+      arg: (value))
+    (eos)))
+
+===
+class-map section bare name (no match-type)
+===
+
+class-map CM
+ match any
+!
+
+---
+
+(config
+  (class_map_section
+    (class_map_header
+      (class_map_kw)
+      name: (value))
+    (match_statement
+      arg: (value))
+    (eos)))
+
+===
+class-map section empty body
+===
+
+class-map match-any EMPTY
+!
+
+---
+
+(config
+  (class_map_section
+    (class_map_header
+      (class_map_kw)
+      match_type: (value)
+      name: (value))
+    (eos)))
+
+===
+class-map section negation (no class-map)
+===
+
+no class-map FOO
+!
+
+---
+
+(config
+  (negated_statement
+    (negation_keyword)
+    keyword: (class_map_header
+      (class_map_kw)
+      name: (value)))
+  (eos))
+
+===
+class-map section with jinja name
+===
+
+class-map match-any {{ name }}
+!
+
+---
+
+(config
+  (class_map_section
+    (class_map_header
+      (class_map_kw)
+      match_type: (value)
+      name: (output))
+    (eos)))

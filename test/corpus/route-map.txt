@@ -1,0 +1,159 @@
+===
+route-map section empty body
+===
+
+route-map FOO permit 10
+!
+
+---
+
+(config
+  (route_map_section
+    (route_map_header
+      (route_map_kw)
+      name: (value)
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+route-map section deny form
+===
+
+route-map BAR deny 5
+!
+
+---
+
+(config
+  (route_map_section
+    (route_map_header
+      (route_map_kw)
+      name: (value)
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+route-map section with match and set
+===
+
+route-map FOO permit 10
+ match ip address 10
+ set metric 100
+!
+
+---
+
+(config
+  (route_map_section
+    (route_map_header
+      (route_map_kw)
+      name: (value)
+      arg: (value)
+      arg: (value))
+    (match_statement
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (set_statement
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+route-map section with continue
+===
+
+route-map RM continue 100
+ continue 100
+!
+
+---
+
+(config
+  (route_map_section
+    (route_map_header
+      (route_map_kw)
+      name: (value)
+      arg: (value)
+      arg: (value))
+    (continue_statement
+      arg: (value))
+    (eos)))
+
+===
+route-map section bare header (no action/sequence)
+===
+
+route-map FOO
+ match as-number 100
+!
+
+---
+
+(config
+  (route_map_section
+    (route_map_header
+      (route_map_kw)
+      name: (value))
+    (match_statement
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+route-map section negation (no route-map)
+===
+
+no route-map FOO
+!
+
+---
+
+(config
+  (negated_statement
+    (negation_keyword)
+    keyword: (route_map_header
+      (route_map_kw)
+      name: (value)))
+  (eos))
+
+===
+route-map reference inside interface body parses flat
+===
+
+interface GigabitEthernet0/0
+ ip policy route-map FOO
+!
+
+---
+
+(config
+  (interface_section
+    (interface_header
+      name: (interface_name))
+    (command_line
+      name: (identifier)
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+route-map section with jinja name
+===
+
+route-map {{ name }} permit 10
+!
+
+---
+
+(config
+  (route_map_section
+    (route_map_header
+      (route_map_kw)
+      name: (output)
+      arg: (value)
+      arg: (value))
+    (eos)))

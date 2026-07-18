@@ -83,10 +83,20 @@ export default grammar({
     _item: $ => choice($._nl, $.section, $._j2_statement, $._ios_statement, $.output, $.comment, $.text),
 
     // Hierarchical section model. A section is a header followed by a body of
-    // commands, terminated by an explicit `!` (eos). Only `interface_section`
-    // exists for now; `section` is the generic dispatch for future section types
-    // (router_section, etc.).
-    section: $ => choice($.interface_section, $.router_section),
+    // commands, terminated by an explicit `!` (eos). Each `*_header` carries a
+    // named `name` field (where applicable) so downstream tooling (LSP symbol
+    // table, definition/references) can resolve the section as a definition
+    // site.
+    section: $ => choice(
+      $.interface_section,
+      $.router_section,
+      $.route_map_section,
+      $.class_map_section,
+      $.policy_map_section,
+      $.vlan_section,
+      $.line_section,
+      $.redundancy_section,
+    ),
 
     interface_section: $ => seq(
       $.interface_header,
@@ -210,9 +220,38 @@ export default grammar({
       field("name", $.identifier),
       repeat(field("arg", $._cmd_arg)),
     )),
-    _cmd_arg: $ => choice($.value, $.output),
+    // `_cmd_arg` includes the section-header keywords (aliased back to
+    // `value`) because tree-sitter's lexer will commit to the prec-2 keyword
+    // tokenization whenever the keyword text appears mid-line in a position
+    // where it COULD begin a sibling section (e.g. inside an interface body or
+    // at top level between two sections). Without these aliases, a line like
+    //   ip policy route-map BAR
+    // would be split into `command_line(ip) + arg(policy)` followed by a
+    // spurious `route_map_section` because the lexer produced the `route-map`
+    // keyword token and `command_line`'s arg position couldn't accept it.
+    // By accepting the keyword here (aliased to `value` so the AST stays
+    // uniform), command_line can consume the keyword as a regular arg.
+    _cmd_arg: $ => choice(
+      $.value,
+      $.output,
+      alias($.route_map_kw, $.value),
+      alias($.class_map_kw, $.value),
+      alias($.policy_map_kw, $.value),
+      alias($.vlan_kw, $.value),
+      alias($.line_kw, $.value),
+      alias($.redundancy_kw, $.value),
+    ),
 
-    section_header: $ => choice($.interface_header, $.router_header),
+    section_header: $ => choice(
+      $.interface_header,
+      $.router_header,
+      $.route_map_header,
+      $.class_map_header,
+      $.policy_map_header,
+      $.vlan_header,
+      $.line_header,
+      $.redundancy_header,
+    ),
 
     interface_header: $ => seq(
       token(prec(2, "interface")),
@@ -441,6 +480,138 @@ export default grammar({
       token(prec(2, "bgp")),
       token(prec(2, "ospf")),
     ),
+
+    // --- additional hierarchical sections ---------------------------------
+    // These were previously DEFERRED (see the historic comment block at the
+    // rich misc rules / `match_statement`). Each header promotes its leading
+    // keyword to a prec-2 named token (`*_kw`) so it tokenizes as a keyword
+    // rather than as `value`/`identifier` — that is what lets the header win
+    // at line start (where `command_line` would otherwise consume the line via
+    // the generic `identifier` + `repeat(arg)` fallback).
+    //
+    // LEXER COMMIT SAFETY: tree-sitter's lexer commits to the prec-2 keyword
+    // tokenization whenever the keyword text appears, even in mid-line
+    // positions where the parser COULD end the current rule and start a
+    // sibling section. To keep `ip policy route-map BAR` and `switchport
+    // access vlan 10` parsing as a single `command_line`, the section
+    // keywords are also listed in `_cmd_arg` (aliased to `value`), so the
+    // parser's arg-repeat can consume them as ordinary values.
+    //
+    // Each header carries a `field("name", ...)` (or for `line_header`, the
+    // `type` + numeric args) so the LSP symbol table can index the definition
+    // site. Bodies are uniform `repeat(choice($._nl, $._body_item))` — the
+    // existing rich rules (`match_statement`, `set_statement`, `class_statement`,
+    // `police_statement`, ...) all live in `_command` and thus work inside
+    // these section bodies automatically.
+
+    // Section-header keyword tokens (named so they can be aliased in
+    // `_cmd_arg`). Each is prec-2 so it wins longest-match/tiebreak over the
+    // generic `value`/`identifier` tokens at line start.
+    route_map_kw: $ => token(prec(2, "route-map")),
+    class_map_kw: $ => token(prec(2, "class-map")),
+    policy_map_kw: $ => token(prec(2, "policy-map")),
+    vlan_kw: $ => token(prec(2, "vlan")),
+    line_kw: $ => token(prec(2, "line")),
+    redundancy_kw: $ => token(prec(2, "redundancy")),
+
+    route_map_section: $ => seq(
+      $.route_map_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    ),
+
+    // `route-map NAME [permit|deny SEQ]`. The optional action+sequence tail
+    // uses bare `$._cmd_arg` (NOT the prec-2 `permit`/`deny` keywords) because
+    // in argument position the lexer expects `value`/`output` only; referencing
+    // `permit_statement` here would call the rich-rule sub-tree, which is the
+    // wrong shape.
+    route_map_header: $ => prec.right(seq(
+      $.route_map_kw,
+      field("name", choice($.value, $.output)),
+      repeat(field("arg", $._cmd_arg)),
+    )),
+
+    class_map_section: $ => seq(
+      $.class_map_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    ),
+
+    // `class-map [match-any|match-all] NAME`. The explicit `choice(seq(...),
+    // name)` avoids the GLR ambiguity between `class-map FOO` (just a name)
+    // and `class-map match-any FOO` (match-type + name). `match-any`/
+    // `match-all` lex as `value` in this position (not promoted to keywords).
+    //
+    // LONGEST-MATCH NOTE: `class-map` (9 chars, prec 2) wins over the existing
+    // `class` keyword (5 chars, prec 2) at line start because tree-sitter's
+    // lexer picks the longer token when precedence ties. Inside a
+    // `policy_map_section` body, `class FOO` still tokenizes as the 5-char
+    // `class` keyword (the next char isn't `-`), so `class_statement` is
+    // unaffected.
+    class_map_header: $ => prec.right(seq(
+      $.class_map_kw,
+      choice(
+        seq(
+          field("match_type", choice($.value, $.output)),
+          field("name", choice($.value, $.output)),
+        ),
+        field("name", choice($.value, $.output)),
+      ),
+    )),
+
+    policy_map_section: $ => seq(
+      $.policy_map_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    ),
+
+    // `policy-map NAME`. `policy-map` (10 chars, prec 2) wins over `value`
+    // matching "policy-map" (prec 1) on precedence and over `identifier`
+    // matching "policy" (6 chars) on length.
+    policy_map_header: $ => prec.right(seq(
+      $.policy_map_kw,
+      field("name", choice($.value, $.output)),
+    )),
+
+    vlan_section: $ => seq(
+      $.vlan_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    ),
+
+    // `vlan N` (or `vlan NAME` for named VLANs in some contexts). The body
+    // contains `name TEXT`, `private-vlan ...`, `remote-span`, etc.
+    vlan_header: $ => prec.right(seq(
+      $.vlan_kw,
+      field("name", choice($.value, $.output)),
+    )),
+
+    line_section: $ => seq(
+      $.line_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    ),
+
+    // `line (aux|console|vty) N [M]`. There is no single `name` field — the
+    // section is identified by `(type, first_num, optional second_num)`. The
+    // LSP symbol table synthesizes a stable key from these (e.g. `vty-0-4`).
+    // `type` is kept as a field for downstream consumers; the numeric range
+    // is left as bare args.
+    line_header: $ => prec.right(seq(
+      $.line_kw,
+      field("type", choice($.value, $.output)),
+      repeat(field("arg", choice($.value, $.output))),
+    )),
+
+    redundancy_section: $ => seq(
+      $.redundancy_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    ),
+
+    // `redundancy` — singleton section (no name). The header is just the
+    // keyword; `no redundancy` works through `section_header` dispatch.
+    redundancy_header: $ => prec.right($.redundancy_kw),
 
     // --- config-router / config-router-af "rich" sub-commands -------------
     // These OVERRIDE the generic `command_line` for high-frequency router
