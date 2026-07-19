@@ -114,6 +114,10 @@
         {
           "type": "SYMBOL",
           "name": "redundancy_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ip_access_list_section"
         }
       ]
     },
@@ -408,6 +412,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "access_list_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "match_statement"
         },
         {
@@ -548,6 +556,15 @@
           },
           "named": true,
           "value": "value"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "access_list_kw"
+          },
+          "named": true,
+          "value": "value"
         }
       ]
     },
@@ -585,6 +602,10 @@
         {
           "type": "SYMBOL",
           "name": "redundancy_header"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ip_access_list_header"
         }
       ]
     },
@@ -920,6 +941,10 @@
         {
           "type": "SYMBOL",
           "name": "deny_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "access_list_statement"
         },
         {
           "type": "SYMBOL",
@@ -1825,6 +1850,121 @@
       "content": {
         "type": "SYMBOL",
         "name": "redundancy_kw"
+      }
+    },
+    "access_list_kw": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "access-list"
+        }
+      }
+    },
+    "ip_access_list_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "ip_access_list_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_nl"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_body_item"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "eos"
+        }
+      ]
+    },
+    "ip_access_list_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "access_list_kw"
+          },
+          {
+            "type": "FIELD",
+            "name": "type",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "value"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "output"
+                }
+              ]
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "value"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "output"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "access_list_statement": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "access_list_kw"
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "FIELD",
+              "name": "arg",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_cmd_arg"
+              }
+            }
+          }
+        ]
       }
     },
     "address_family_statement": {
@@ -6216,6 +6356,10 @@
     ],
     [
       "router_header"
+    ],
+    [
+      "_cmd_arg",
+      "ip_access_list_header"
     ]
   ],
   "precedences": [],

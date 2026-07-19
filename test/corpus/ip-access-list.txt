@@ -1,0 +1,230 @@
+===
+named standard ACL with permit body
+===
+
+ip access-list standard FOO
+ permit 10.0.0.0 0.0.0.255
+!
+
+---
+
+(config
+  (ip_access_list_section
+    (ip_access_list_header
+      (identifier)
+      (access_list_kw)
+      type: (value)
+      name: (value))
+    (permit_statement
+      action_args: (value)
+      action_args: (value))
+    (eos)))
+
+===
+named extended ACL with permit tcp eq 443 body
+===
+
+ip access-list extended BAR
+ permit tcp any any eq 443
+!
+
+---
+
+(config
+  (ip_access_list_section
+    (ip_access_list_header
+      (identifier)
+      (access_list_kw)
+      type: (value)
+      name: (value))
+    (permit_statement
+      action_args: (value)
+      action_args: (value)
+      action_args: (value)
+      action_args: (value)
+      action_args: (value))
+    (eos)))
+
+===
+named ACL with deny body
+===
+
+ip access-list standard BAZ
+ deny 10.0.0.0 0.0.0.255
+!
+
+---
+
+(config
+  (ip_access_list_section
+    (ip_access_list_header
+      (identifier)
+      (access_list_kw)
+      type: (value)
+      name: (value))
+    (deny_statement
+      action_args: (value)
+      action_args: (value))
+    (eos)))
+
+===
+empty named ACL body
+===
+
+ip access-list standard EMPTY
+!
+
+---
+
+(config
+  (ip_access_list_section
+    (ip_access_list_header
+      (identifier)
+      (access_list_kw)
+      type: (value)
+      name: (value))
+    (eos)))
+
+===
+named ACL with jinja name
+===
+
+ip access-list extended {{ name }}
+ permit ip any any
+!
+
+---
+
+(config
+  (ip_access_list_section
+    (ip_access_list_header
+      (identifier)
+      (access_list_kw)
+      type: (value)
+      name: (output))
+    (permit_statement
+      action_args: (value)
+      action_args: (value)
+      action_args: (value))
+    (eos)))
+
+===
+numbered ACL flat statement
+===
+
+access-list 101 permit ip any any
+!
+
+---
+
+(config
+  (access_list_statement
+    (access_list_kw)
+    arg: (value)
+    arg: (value)
+    arg: (value)
+    arg: (value)
+    arg: (value))
+  (eos))
+
+===
+numbered ACL with deny
+===
+
+access-list 7 deny 192.168.1.0 0.0.0.255
+!
+
+---
+
+(config
+  (access_list_statement
+    (access_list_kw)
+    arg: (value)
+    arg: (value)
+    arg: (value)
+    arg: (value))
+  (eos))
+
+===
+named ACL negation (no ip access-list)
+===
+
+no ip access-list standard FOO
+!
+
+---
+
+(config
+  (negated_statement
+    (negation_keyword)
+    keyword: (ip_access_list_header
+      (identifier)
+      (access_list_kw)
+      type: (value)
+      name: (value)))
+  (eos))
+
+===
+numbered ACL negation (no access-list)
+===
+
+no access-list 101 permit ip any any
+!
+
+---
+
+(config
+  (negated_statement
+    (negation_keyword)
+    keyword: (access_list_statement
+      (access_list_kw)
+      arg: (value)
+      arg: (value)
+      arg: (value)
+      arg: (value)
+      arg: (value)))
+  (eos))
+
+===
+access-group reference inside interface parses flat (regression guard)
+===
+
+interface Gi0/0
+ ip access-group FOO in
+!
+
+---
+
+(config
+  (interface_section
+    (interface_header
+      name: (interface_name))
+    (command_line
+      name: (identifier)
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+access-list keyword as command_line arg (regression guard)
+===
+
+ip access-list standard FOO
+ match ip address BAR
+!
+
+---
+
+(config
+  (ip_access_list_section
+    (ip_access_list_header
+      (identifier)
+      (access_list_kw)
+      type: (value)
+      name: (value))
+    (match_statement
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (eos)))

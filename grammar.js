@@ -47,7 +47,7 @@ export default grammar({
   // multi-line repeat (`config`, section bodies, jinja statement bodies)
   // explicitly consumes inter-item newlines via the hidden `_nl` rule.
   extras: $ => [/[\t\r ]/],
-  conflicts: $ => [[$.elif_statement], [$.router_header]],
+  conflicts: $ => [[$.elif_statement], [$.router_header], [$._cmd_arg, $.ip_access_list_header]],
   // `section`/`section_header` are dispatch helpers over concrete section types;
   // inline them so the emitted node is the concrete section/header (e.g.
   // `interface_section`, `router_header`) rather than a redundant wrapper.
@@ -96,6 +96,7 @@ export default grammar({
       $.vlan_section,
       $.line_section,
       $.redundancy_section,
+      $.ip_access_list_section,
     ),
 
     interface_section: $ => seq(
@@ -183,6 +184,10 @@ export default grammar({
       // config-(ext|std|ipv6|ext-macl)-nacl / config-source-guard ACE line)
       $.permit_statement,
       $.deny_statement,
+      // --- numbered access-list flat statement (see comment block above
+      // `access_list_statement` — this is the leading keyword of every
+      // numbered config ACL line `access-list <N> permit|deny ...`)
+      $.access_list_statement,
       // --- rich misc rules (match/set/class + vlan/pmap-c/redundancy/route-map;
       // see comment block above `match_statement` for the GENERIC rationale and
       // the per-keyword deferred notes)
@@ -240,6 +245,7 @@ export default grammar({
       alias($.vlan_kw, $.value),
       alias($.line_kw, $.value),
       alias($.redundancy_kw, $.value),
+      alias($.access_list_kw, $.value),
     ),
 
     section_header: $ => choice(
@@ -251,6 +257,7 @@ export default grammar({
       $.vlan_header,
       $.line_header,
       $.redundancy_header,
+      $.ip_access_list_header,
     ),
 
     interface_header: $ => seq(
@@ -370,6 +377,11 @@ export default grammar({
         // `command_line` (which needs `identifier`, not the prec-2 keyword).
         $.permit_statement,
         $.deny_statement,
+        // --- numbered access-list flat statement (mirrors the entry in
+        // `_command`). Without this registration, a `access-list <N> ...`
+        // line at top level would silently fall back to `command_line`
+        // (which needs `identifier`, not the prec-2 `access_list_kw`).
+        $.access_list_statement,
         // --- rich misc rules (mirror the entries in `_command`). The grammar
         // has NO vlan/class-map/policy-map/redundancy/route-map sections (only
         // `interface_section` and `router_section`), so every `match ...`,
@@ -612,6 +624,97 @@ export default grammar({
     // `redundancy` — singleton section (no name). The header is just the
     // keyword; `no redundancy` works through `section_header` dispatch.
     redundancy_header: $ => prec.right($.redundancy_kw),
+
+    // --- ip access-list hierarchical section + numbered-ACL flat statement --
+    //
+    // Two related but distinct shapes are modeled here, both keyed on the
+    // prec-2 `access_list_kw` token:
+    //
+    //   1. `ip access-list <standard|extended> NAME { body }` — a real
+    //      hierarchical section (`ip_access_list_section` /
+    //      `ip_access_list_header`). IOS opens a sub-mode (config-ext-nacl /
+    //      config-std-nacl) whose body lines are ACE verbs (`permit` / `deny`
+    //      via the existing `permit_statement` / `deny_statement` rules).
+    //
+    //   2. `access-list <N> permit|deny ...` — a FLAT top-level/global
+    //      statement (`access_list_statement`). The numbered form does NOT
+    //      open a sub-mode; the entire ACE lives on one line.
+    //
+    // LEXER COMMIT WORKAROUND: the leading keyword `access-list` is promoted
+    // to a prec-2 named token (`access_list_kw`), parallel to the other six
+    // section keywords above. Tree-sitter's lexer commits to that
+    // tokenization whenever the literal `access-list` appears, including
+    // mid-line in command_line arg position. To keep lines like
+    //   ip access-list standard FOO         (GLR sibling: command_line(ip) ...)
+    //   ip policy route-map BAR             (already covered by route_map_kw)
+    // parsing uniformly, `access_list_kw` is aliased to `$.value` inside
+    // `_cmd_arg` — see the comment block on `_cmd_arg` for the general
+    // rationale. Without that alias, the prec-2 keyword would leak out of
+    // `command_line`'s arg repeat and split the line into a broken
+    // `command_line(ip) + spurious ip_access_list_section/access_list_statement`
+    // pair.
+    //
+    // `ip` IS NOT PROMOTED. Promoting `ip` to prec-2 breaks every other
+    // `ip ...` line in the grammar (ip access-group, ip helper-address, ip
+    // route, ip verify, ...) because the lexer commits to the keyword and
+    // tree-sitter does NOT re-lex; the prior Phase 1 attempt regressed
+    // coverage by +344 errors (see the deferred-`ip address` comment above).
+    // Instead, `ip_access_list_header` starts with a bare `$.identifier`
+    // (the literal `ip`) and lets GLR fork against `command_line`. At the
+    // second-token position, the lexer emits `access_list_kw` (11 chars,
+    // prec 2) which both branches can accept (command_line via the alias in
+    // `_cmd_arg`, the header directly) — the header wins via `prec.right`.
+    // If `tree-sitter generate` reports a conflict for this fork, add
+    // `[$.ip_access_list_header]` to the `conflicts` array at the top of
+    // this file (template: the existing `[$.router_header]` entry).
+
+    access_list_kw: $ => token(prec(2, "access-list")),
+
+    ip_access_list_section: $ => seq(
+      $.ip_access_list_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    ),
+
+    // `ip access-list <standard|extended> NAME`. The leading `ip` is a bare
+    // identifier (NOT promoted — see above). After identifier, the parser
+    // expects `access_list_kw`; the lexer produces it because prec-2 wins
+    // length/precedence ties against the generic `value` matching the
+    // literal `access-list`. The body is uniform with the other sections
+    // (`repeat(choice($._nl, $._body_item))`), so the existing
+    // `permit_statement` / `deny_statement` rules inside `_command` work as
+    // ACE body lines automatically.
+    //
+    // `prec.right` is required so this header wins the GLR fork against the
+    // alternative `command_line(ip)` parse at line start of
+    // `ip access-list standard FOO` — without it the conflict resolves to
+    // whichever branch tree-sitter happens to reduce first, which can leave
+    // ACE body lines orphaned as top-level siblings.
+    ip_access_list_header: $ => prec.right(seq(
+      $.identifier,                                    // "ip"
+      $.access_list_kw,                                // "access-list"
+      field("type", choice($.value, $.output)),        // "standard" | "extended"
+      field("name", choice($.value, $.output)),
+    )),
+
+    // `access-list <N> permit|deny ...` — flat numbered-ACL statement. The
+    // leading `access_list_kw` (prec 2) is the longest-match token at line
+    // start of `access-list 101 permit ip any any` (11 chars vs `identifier`
+    // matching "access" at 6 chars), so `command_line` (which starts on
+    // `identifier`) cannot match and every numbered-ACL line routes here.
+    // This replaces the pre-rule parse shape
+    //   command_line(access) + text("-list 101 permit ip any any")
+    // with a single structured `access_list_statement` node whose `arg`
+    // children carry the number, action, and ACE specifics. Body args stay
+    // unstructured; downstream ACE resolution is the LSP's job.
+    //
+    // Registered in BOTH `_ios_statement` (top-level numbered ACLs) and
+    // `_command` (so `negated_statement` and section bodies can host the
+    // rare `no access-list 101 ...` and the even rarer mid-section form).
+    access_list_statement: $ => prec.right(seq(
+      $.access_list_kw,
+      repeat(field("arg", $._cmd_arg)),
+    )),
 
     // --- config-router / config-router-af "rich" sub-commands -------------
     // These OVERRIDE the generic `command_line` for high-frequency router
