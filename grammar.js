@@ -47,7 +47,7 @@ export default grammar({
   // multi-line repeat (`config`, section bodies, jinja statement bodies)
   // explicitly consumes inter-item newlines via the hidden `_nl` rule.
   extras: $ => [/[\t\r ]/],
-  conflicts: $ => [[$.elif_statement], [$.router_header], [$._cmd_arg, $.ip_access_list_header]],
+  conflicts: $ => [[$.elif_statement], [$.router_header], [$._cmd_arg, $.ip_access_list_header], [$.address_family_kw, $.address_family_statement]],
   // `section`/`section_header` are dispatch helpers over concrete section types;
   // inline them so the emitted node is the concrete section/header (e.g.
   // `interface_section`, `router_header`) rather than a redundant wrapper.
@@ -90,6 +90,7 @@ export default grammar({
     section: $ => choice(
       $.interface_section,
       $.router_section,
+      $.address_family_section,
       $.route_map_section,
       $.class_map_section,
       $.policy_map_section,
@@ -246,6 +247,7 @@ export default grammar({
       alias($.line_kw, $.value),
       alias($.redundancy_kw, $.value),
       alias($.access_list_kw, $.value),
+      alias($.address_family_kw, $.value),
     ),
 
     section_header: $ => choice(
@@ -493,6 +495,22 @@ export default grammar({
       token(prec(2, "ospf")),
     ),
 
+    address_family_section: $ => prec.dynamic(1, seq(
+      $.address_family_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    )),
+
+    // `address-family ipv4` or `address-family vpnv4 unicast`. The name is the
+    // AF identifier (ipv4, ipv6, vpnv4, ...); trailing modifiers (unicast,
+    // multicast, vrf NAME) are captured as generic args. Follows the same
+    // shape as route_map_header.
+    address_family_header: $ => prec.right(seq(
+      $.address_family_kw,
+      field("name", choice($.value, $.output)),
+      repeat(field("arg", $._cmd_arg)),
+    )),
+
     // --- additional hierarchical sections ---------------------------------
     // These were previously DEFERRED (see the historic comment block at the
     // rich misc rules / `match_statement`). Each header promotes its leading
@@ -525,6 +543,7 @@ export default grammar({
     vlan_kw: $ => token(prec(2, "vlan")),
     line_kw: $ => token(prec(2, "line")),
     redundancy_kw: $ => token(prec(2, "redundancy")),
+    address_family_kw: $ => token(prec(2, "address-family")),
 
     route_map_section: $ => seq(
       $.route_map_header,

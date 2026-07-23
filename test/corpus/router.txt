@@ -242,3 +242,83 @@ router ospf 1
     (autonomous_system_statement
       arg: (value))
     (eos)))
+
+===
+address-family section with neighbor
+===
+
+!
+router bgp 100
+ address-family ipv4
+  neighbor 1.2.3.4 activate
+ !
+!
+
+---
+
+(config
+  (eos)
+  (router_section
+    (router_header
+      protocol: (routing_protocol)
+      process_id: (value))
+    (address_family_section
+      (address_family_header
+        (address_family_kw)
+        name: (value))
+      (neighbor_statement
+        arg: (value)
+        arg: (value))
+      (eos))
+    (eos)))
+
+===
+address-family ipv4 unicast
+===
+
+!
+router bgp 100
+ address-family ipv4 unicast
+ !
+!
+
+---
+
+(config
+  (eos)
+  (router_section
+    (router_header
+      protocol: (routing_protocol)
+      process_id: (value))
+    (address_family_section
+      (address_family_header
+        (address_family_kw)
+        name: (value)
+        arg: (value))
+      (eos))
+    (eos)))
+
+===
+address-family with jinja name
+===
+
+!
+router bgp 100
+ address-family {{ af }}
+ !
+!
+
+---
+
+(config
+  (eos)
+  (router_section
+    (router_header
+      protocol: (routing_protocol)
+      process_id: (value))
+    (address_family_section
+      (address_family_header
+        (address_family_kw)
+        name: (output))
+      (eos))
+    (eos)))
