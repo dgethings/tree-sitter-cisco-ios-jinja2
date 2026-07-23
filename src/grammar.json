@@ -93,6 +93,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "address_family_section"
+        },
+        {
+          "type": "SYMBOL",
           "name": "route_map_section"
         },
         {
@@ -562,6 +566,15 @@
           "content": {
             "type": "SYMBOL",
             "name": "access_list_kw"
+          },
+          "named": true,
+          "value": "value"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "address_family_kw"
           },
           "named": true,
           "value": "value"
@@ -1379,6 +1392,80 @@
         }
       ]
     },
+    "address_family_section": {
+      "type": "PREC_DYNAMIC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "address_family_header"
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_nl"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_body_item"
+                }
+              ]
+            }
+          },
+          {
+            "type": "SYMBOL",
+            "name": "eos"
+          }
+        ]
+      }
+    },
+    "address_family_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "address_family_kw"
+          },
+          {
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "value"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "output"
+                }
+              ]
+            }
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "FIELD",
+              "name": "arg",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_cmd_arg"
+              }
+            }
+          }
+        ]
+      }
+    },
     "route_map_kw": {
       "type": "TOKEN",
       "content": {
@@ -1442,6 +1529,17 @@
         "content": {
           "type": "STRING",
           "value": "redundancy"
+        }
+      }
+    },
+    "address_family_kw": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "address-family"
         }
       }
     },
@@ -6360,6 +6458,10 @@
     [
       "_cmd_arg",
       "ip_access_list_header"
+    ],
+    [
+      "address_family_kw",
+      "address_family_statement"
     ]
   ],
   "precedences": [],
