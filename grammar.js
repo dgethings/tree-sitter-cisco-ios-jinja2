@@ -47,7 +47,7 @@ export default grammar({
   // multi-line repeat (`config`, section bodies, jinja statement bodies)
   // explicitly consumes inter-item newlines via the hidden `_nl` rule.
   extras: $ => [/[\t\r ]/],
-  conflicts: $ => [[$.elif_statement], [$.router_header], [$._cmd_arg, $.ip_access_list_header], [$.address_family_kw, $.address_family_statement]],
+  conflicts: $ => [[$.elif_statement], [$.router_header], [$._cmd_arg, $.ip_access_list_header], [$.address_family_kw, $.address_family_statement], [$._cmd_arg, $.policy_map_class_header]],
   // `section`/`section_header` are dispatch helpers over concrete section types;
   // inline them so the emitted node is the concrete section/header (e.g.
   // `interface_section`, `router_header`) rather than a redundant wrapper.
@@ -94,6 +94,7 @@ export default grammar({
       $.route_map_section,
       $.class_map_section,
       $.policy_map_section,
+      $.policy_map_class_section,
       $.vlan_section,
       $.line_section,
       $.redundancy_section,
@@ -601,6 +602,30 @@ export default grammar({
     // matching "policy" (6 chars) on length.
     policy_map_header: $ => prec.right(seq(
       $.policy_map_kw,
+      field("name", choice($.value, $.output)),
+    )),
+
+    policy_map_class_section: $ => prec.dynamic(1, seq(
+      $.policy_map_class_header,
+      repeat(choice($._nl, $._body_item)),
+      $.eos,
+    )),
+
+    // `class CLASS_NAME` inside a policy-map section (opens the config-pmap-c
+    // sub-mode). Uses the same prec-2 `class` keyword as `class_statement`
+    // (both reference `token(prec(2, "class"))`), so the lexer produces ONE
+    // token for both. The parser resolves the ambiguity via GLR: the flat
+    // `class_statement` parse and the `policy_map_class_section` parse both
+    // fork at the `class` keyword; `prec.dynamic(1, ...)` on the section rule
+    // makes the section win whenever BOTH parses complete (i.e. when a real
+    // `config-pmap-c` body plus its own terminating `!` follow — the section
+    // consumes strictly more input). When only ONE `!` follows the body (no
+    // dedicated sub-mode terminator), the section parse cannot complete (the
+    // outer `policy_map_section` is left without its `eos`) and the flat
+    // `class_statement` parse is selected instead. This mirrors the
+    // `address_family_section` pattern.
+    policy_map_class_header: $ => prec.right(seq(
+      token(prec(2, "class")),
       field("name", choice($.value, $.output)),
     )),
 

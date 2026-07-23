@@ -359,6 +359,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -866,6 +870,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -1211,6 +1219,10 @@
         },
         {
           "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
           "named": true
         },
         {
@@ -1590,6 +1602,10 @@
         },
         {
           "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
           "named": true
         },
         {
@@ -2018,6 +2034,10 @@
         },
         {
           "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
           "named": true
         },
         {
@@ -2565,6 +2585,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -2869,6 +2893,10 @@
           },
           {
             "type": "police_statement",
+            "named": true
+          },
+          {
+            "type": "policy_map_class_section",
             "named": true
           },
           {
@@ -3305,6 +3333,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -3609,6 +3641,10 @@
           },
           {
             "type": "police_statement",
+            "named": true
+          },
+          {
+            "type": "policy_map_class_section",
             "named": true
           },
           {
@@ -3931,6 +3967,10 @@
           },
           {
             "type": "police_statement",
+            "named": true
+          },
+          {
+            "type": "policy_map_class_section",
             "named": true
           },
           {
@@ -4333,6 +4373,10 @@
           },
           {
             "type": "police_statement",
+            "named": true
+          },
+          {
+            "type": "policy_map_class_section",
             "named": true
           },
           {
@@ -4781,6 +4825,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -5181,6 +5229,10 @@
         },
         {
           "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
           "named": true
         },
         {
@@ -5628,6 +5680,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -6013,6 +6069,10 @@
         },
         {
           "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
           "named": true
         },
         {
@@ -6790,6 +6850,385 @@
     }
   },
   {
+    "type": "policy_map_class_header",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "policy_map_class_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "access_class_statement",
+          "named": true
+        },
+        {
+          "type": "access_list_statement",
+          "named": true
+        },
+        {
+          "type": "activation_character_statement",
+          "named": true
+        },
+        {
+          "type": "address_family_section",
+          "named": true
+        },
+        {
+          "type": "address_family_statement",
+          "named": true
+        },
+        {
+          "type": "af_interface_statement",
+          "named": true
+        },
+        {
+          "type": "aggregate_address_statement",
+          "named": true
+        },
+        {
+          "type": "auto_cost_statement",
+          "named": true
+        },
+        {
+          "type": "auto_sync_statement",
+          "named": true
+        },
+        {
+          "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "boot_statement",
+          "named": true
+        },
+        {
+          "type": "class_map_section",
+          "named": true
+        },
+        {
+          "type": "class_statement",
+          "named": true
+        },
+        {
+          "type": "command_line",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "compatible_statement",
+          "named": true
+        },
+        {
+          "type": "continue_statement",
+          "named": true
+        },
+        {
+          "type": "databits_statement",
+          "named": true
+        },
+        {
+          "type": "default_information_statement",
+          "named": true
+        },
+        {
+          "type": "deny_statement",
+          "named": true
+        },
+        {
+          "type": "description_statement",
+          "named": true
+        },
+        {
+          "type": "distribute_list_statement",
+          "named": true
+        },
+        {
+          "type": "drop_statement",
+          "named": true
+        },
+        {
+          "type": "duplex_statement",
+          "named": true
+        },
+        {
+          "type": "editing_statement",
+          "named": true
+        },
+        {
+          "type": "eos",
+          "named": true
+        },
+        {
+          "type": "escape_character_statement",
+          "named": true
+        },
+        {
+          "type": "exception_statement",
+          "named": true
+        },
+        {
+          "type": "exec_timeout_statement",
+          "named": true
+        },
+        {
+          "type": "exit_address_family_statement",
+          "named": true
+        },
+        {
+          "type": "graceful_restart_statement",
+          "named": true
+        },
+        {
+          "type": "hostname_statement",
+          "named": true
+        },
+        {
+          "type": "hw_module_statement",
+          "named": true
+        },
+        {
+          "type": "interface_section",
+          "named": true
+        },
+        {
+          "type": "ip_access_list_section",
+          "named": true
+        },
+        {
+          "type": "kerberos_statement",
+          "named": true
+        },
+        {
+          "type": "length_statement",
+          "named": true
+        },
+        {
+          "type": "line_section",
+          "named": true
+        },
+        {
+          "type": "login_statement",
+          "named": true
+        },
+        {
+          "type": "mac_address_table_statement",
+          "named": true
+        },
+        {
+          "type": "match_statement",
+          "named": true
+        },
+        {
+          "type": "maximum_prefix_statement",
+          "named": true
+        },
+        {
+          "type": "memory_statement",
+          "named": true
+        },
+        {
+          "type": "metric_style_statement",
+          "named": true
+        },
+        {
+          "type": "motd_banner_statement",
+          "named": true
+        },
+        {
+          "type": "mtu_statement",
+          "named": true
+        },
+        {
+          "type": "negated_statement",
+          "named": true
+        },
+        {
+          "type": "neighbor_statement",
+          "named": true
+        },
+        {
+          "type": "network_statement",
+          "named": true
+        },
+        {
+          "type": "output",
+          "named": true
+        },
+        {
+          "type": "padding_statement",
+          "named": true
+        },
+        {
+          "type": "parity_statement",
+          "named": true
+        },
+        {
+          "type": "parser_statement",
+          "named": true
+        },
+        {
+          "type": "passive_interface_statement",
+          "named": true
+        },
+        {
+          "type": "password_statement",
+          "named": true
+        },
+        {
+          "type": "permit_statement",
+          "named": true
+        },
+        {
+          "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_header",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
+          "type": "policy_map_section",
+          "named": true
+        },
+        {
+          "type": "priority_statement",
+          "named": true
+        },
+        {
+          "type": "private_vlan_statement",
+          "named": true
+        },
+        {
+          "type": "queue_depth_statement",
+          "named": true
+        },
+        {
+          "type": "random_detect_statement",
+          "named": true
+        },
+        {
+          "type": "redistribute_statement",
+          "named": true
+        },
+        {
+          "type": "redundancy_section",
+          "named": true
+        },
+        {
+          "type": "remote_span_statement",
+          "named": true
+        },
+        {
+          "type": "route_map_section",
+          "named": true
+        },
+        {
+          "type": "router_id_statement",
+          "named": true
+        },
+        {
+          "type": "router_section",
+          "named": true
+        },
+        {
+          "type": "rtr_statement",
+          "named": true
+        },
+        {
+          "type": "scheduler_statement",
+          "named": true
+        },
+        {
+          "type": "service_statement",
+          "named": true
+        },
+        {
+          "type": "set_statement",
+          "named": true
+        },
+        {
+          "type": "shutdown_statement",
+          "named": true
+        },
+        {
+          "type": "snmp_server_statement",
+          "named": true
+        },
+        {
+          "type": "speed_statement",
+          "named": true
+        },
+        {
+          "type": "stopbits_statement",
+          "named": true
+        },
+        {
+          "type": "subscriber_statement",
+          "named": true
+        },
+        {
+          "type": "summary_prefix_statement",
+          "named": true
+        },
+        {
+          "type": "tacacs_server_statement",
+          "named": true
+        },
+        {
+          "type": "terminal_type_statement",
+          "named": true
+        },
+        {
+          "type": "text",
+          "named": true
+        },
+        {
+          "type": "transport_statement",
+          "named": true
+        },
+        {
+          "type": "version_statement",
+          "named": true
+        },
+        {
+          "type": "vlan_section",
+          "named": true
+        },
+        {
+          "type": "width_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "policy_map_header",
     "named": true,
     "fields": {
@@ -7053,6 +7492,10 @@
         },
         {
           "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
           "named": true
         },
         {
@@ -7557,6 +8000,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -7976,6 +8423,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -8378,6 +8829,10 @@
         },
         {
           "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
           "named": true
         },
         {
@@ -9205,6 +9660,10 @@
           "named": true
         },
         {
+          "type": "policy_map_class_section",
+          "named": true
+        },
+        {
           "type": "policy_map_section",
           "named": true
         },
@@ -9574,6 +10033,10 @@
         },
         {
           "type": "police_statement",
+          "named": true
+        },
+        {
+          "type": "policy_map_class_section",
           "named": true
         },
         {

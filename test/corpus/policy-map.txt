@@ -95,3 +95,91 @@ policy-map {{ name }}
       (policy_map_kw)
       name: (output))
     (eos)))
+
+===
+policy-map class section with police
+===
+
+!
+policy-map QOS-OUT
+ class VOIP
+  police 8000
+ !
+!
+
+---
+
+(config
+  (eos)
+  (policy_map_section
+    (policy_map_header
+      (policy_map_kw)
+      name: (value))
+    (policy_map_class_section
+      (policy_map_class_header
+        name: (value))
+      (police_statement
+        arg: (value))
+      (eos))
+    (eos)))
+
+===
+policy-map class section empty body
+===
+
+!
+policy-map QOS-OUT
+ class VOIP
+ !
+!
+
+---
+
+(config
+  (eos)
+  (policy_map_section
+    (policy_map_header
+      (policy_map_kw)
+      name: (value))
+    (policy_map_class_section
+      (policy_map_class_header
+        name: (value))
+      (eos))
+    (eos)))
+
+===
+policy-map multiple class sections
+===
+
+!
+policy-map QOS-OUT
+ class VOIP
+  priority 100
+ !
+ class DATA
+  police 8000
+ !
+!
+
+---
+
+(config
+  (eos)
+  (policy_map_section
+    (policy_map_header
+      (policy_map_kw)
+      name: (value))
+    (policy_map_class_section
+      (policy_map_class_header
+        name: (value))
+      (priority_statement
+        arg: (value))
+      (eos))
+    (policy_map_class_section
+      (policy_map_class_header
+        name: (value))
+      (police_statement
+        arg: (value))
+      (eos))
+    (eos)))
+
