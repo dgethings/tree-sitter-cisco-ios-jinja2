@@ -109,6 +109,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "policy_map_class_section"
+        },
+        {
+          "type": "SYMBOL",
           "name": "vlan_section"
         },
         {
@@ -1754,6 +1758,76 @@
           {
             "type": "SYMBOL",
             "name": "policy_map_kw"
+          },
+          {
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "value"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "output"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "policy_map_class_section": {
+      "type": "PREC_DYNAMIC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "policy_map_class_header"
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_nl"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_body_item"
+                }
+              ]
+            }
+          },
+          {
+            "type": "SYMBOL",
+            "name": "eos"
+          }
+        ]
+      }
+    },
+    "policy_map_class_header": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 2,
+              "content": {
+                "type": "STRING",
+                "value": "class"
+              }
+            }
           },
           {
             "type": "FIELD",
@@ -6462,6 +6536,10 @@
     [
       "address_family_kw",
       "address_family_statement"
+    ],
+    [
+      "_cmd_arg",
+      "policy_map_class_header"
     ]
   ],
   "precedences": [],
