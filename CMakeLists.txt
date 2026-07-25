@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(tree-sitter-cisco-ios-jinja2
-        VERSION "0.2.1"
+        VERSION "0.3.0"
         DESCRIPTION "Tree sitter grammar for the Cisco IOS network Operating System"
         HOMEPAGE_URL "https://github.com/dgethings/tree-sitter-cisco-ios-jinja2"
         LANGUAGES C)
