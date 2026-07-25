@@ -322,3 +322,122 @@ router bgp 100
         name: (output))
       (eos))
     (eos)))
+
+===
+router eigrp classic mode
+===
+
+router eigrp 100
+ network 10.0.0.0 0.0.0.255
+ eigrp log-neighbor-changes
+ eigrp stub
+ router-id 1.1.1.1
+ passive-interface GigabitEthernet0/0
+!
+
+---
+
+(config
+  (router_section
+    (router_header
+      protocol: (routing_protocol)
+      process_id: (value))
+    (network_statement
+      arg: (value)
+      arg: (value))
+    (eigrp_router_statement
+      arg: (value))
+    (eigrp_router_statement
+      arg: (value))
+    (router_id_statement
+      arg: (value))
+    (passive_interface_statement
+      arg: (value))
+    (eos)))
+
+===
+router rip no process id
+===
+
+router rip
+ version 2
+ network 10.0.0.0
+ passive-interface GigabitEthernet0/0
+ redistribute connected metric 1
+!
+
+---
+
+(config
+  (router_section
+    (router_header
+      protocol: (routing_protocol))
+    (version_statement
+      configured_version: (value))
+    (network_statement
+      arg: (value))
+    (passive_interface_statement
+      arg: (value))
+    (redistribute_statement
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (eos)))
+
+===
+router isis with tag
+===
+
+router isis TAG
+ net 49.0001.1921.6800.1001.00
+ metric-style wide
+ passive-interface GigabitEthernet0/0
+ redistribute connected
+!
+
+---
+
+(config
+  (router_section
+    (router_header
+      protocol: (routing_protocol)
+      process_id: (value))
+    (command_line
+      name: (identifier)
+      arg: (value))
+    (metric_style_statement
+      arg: (value))
+    (passive_interface_statement
+      arg: (value))
+    (redistribute_statement
+      arg: (value))
+    (eos)))
+
+===
+router eigrp named mode address-family
+===
+
+router eigrp CUSTOMER
+ address-family ipv4 unicast
+  network 10.0.0.0 0.0.0.255
+  eigrp stub
+ exit-address-family
+!
+
+---
+
+(config
+  (router_section
+    (router_header
+      protocol: (routing_protocol)
+      process_id: (value))
+    (address_family_statement
+      arg: (value)
+      arg: (value))
+    (network_statement
+      arg: (value)
+      arg: (value))
+    (eigrp_router_statement
+      arg: (value))
+    (exit_address_family_statement)
+    (eos)))

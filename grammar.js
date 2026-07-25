@@ -152,6 +152,7 @@ export default grammar({
       $.summary_prefix_statement,
       $.default_information_statement,
       $.distribute_list_statement,
+      $.eigrp_router_statement,
       $.snmp_server_statement,
       $.scheduler_statement,
       $.hw_module_statement,
@@ -488,13 +489,47 @@ export default grammar({
     router_header: $ => seq(
       token(prec(2, "router")),
       field("protocol", $.routing_protocol),
-      field("process_id", choice($.value, $.output, seq($.value, $.output))),
+      // process_id is optional: most protocols carry one (bgp ASN, ospf
+      // process-id, eigrp AS / named tag, isis area-tag) but classic `router
+      // rip` has none.
+      optional(field("process_id", choice($.value, $.output, seq($.value, $.output)))),
     ),
 
     routing_protocol: $ => choice(
       token(prec(2, "bgp")),
       token(prec(2, "ospf")),
+      token(prec(2, "eigrp")),
+      token(prec(2, "rip")),
+      token(prec(2, "isis")),
     ),
+
+    // Mirror of the documented BGP lexer-commit trap (see the DEFERRED comment
+    // block ~line 797). `eigrp` is a prec-2 keyword via `routing_protocol`, so
+    // a `eigrp <subcmd>` line inside a `router eigrp` body (eigrp
+    // log-neighbor-changes, eigrp stub, eigrp metric, eigrp
+    // log-neighbor-warnings, ...) cannot fall back to `command_line` — the
+    // lexer commits to the keyword tokenization. This dedicated rule gives
+    // those lines a parse.
+    //
+    // SECONDARY COLLISION (same class as the BGP `<subcmd>` trap above): if
+    // the sub-command word is ITSELF a prec-2 keyword (notably `router-id`,
+    // the first token of `router_id_statement`), the lexer commits to THAT
+    // keyword mid-line and `eigrp_router_statement`'s arg-repeat cannot
+    // consume it — so `eigrp router-id 1.1.1.1` splits into a bare
+    // `eigrp_router_statement` + sibling `router_id_statement`. Classic-mode
+    // `router eigrp <AS>` uses the unprefixed `router-id` form anyway (which
+    // parses as `router_id_statement` directly), and named-mode AF bodies can
+    // use `eigrp stub` / `eigrp log-neighbor-changes`. Resolving the
+    // `eigrp router-id` split would require aliasing `router-id` into
+    // `_cmd_arg` (collision risk across route-map `set router-id`, etc.) and
+    // is left for a follow-up.
+    //
+    // RIP and IS-IS have no `<proto> ...` sub-commands inside their router
+    // body, so they need no matching rule.
+    eigrp_router_statement: $ => prec.right(seq(
+      token(prec(2, "eigrp")),
+      field("arg", repeat($._cmd_arg)),
+    )),
 
     address_family_section: $ => prec.dynamic(1, seq(
       $.address_family_header,
@@ -801,7 +836,12 @@ export default grammar({
     //     not `identifier`). A dedicated generic `bgp_router_statement` is
     //     feasible but intentionally left out of this batch; add + verify
     //     separately.
-    //   * `timers`, `mpls`, `area`, `distance`, `bfd`, `eigrp` — multi-mode
+    //   * `eigrp <subcmd>` (eigrp router-id, eigrp stub, ...) — RESOLVED via
+    //     `eigrp_router_statement` above (same lexer-commit trap as BGP, plus
+    //     eigrp was promoted to a routing_protocol keyword for
+    //     `router eigrp`). RIP / IS-IS have no `<proto> ...` sub-commands and
+    //     need no matching rule.
+    //   * `timers`, `mpls`, `area`, `distance`, `bfd` — multi-mode
     //     collision risk (several also appear in config-if / config-line /
     //     global); revisit as generic rules once this batch is confirmed.
     //   * `ip ...` router commands (e.g. `ip prefix-list`, `ip route` inside

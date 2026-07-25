@@ -300,6 +300,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "eigrp_router_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "snmp_server_statement"
         },
         {
@@ -1338,21 +1342,13 @@
           }
         },
         {
-          "type": "FIELD",
-          "name": "process_id",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "value"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "output"
-              },
-              {
-                "type": "SEQ",
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "process_id",
+              "content": {
+                "type": "CHOICE",
                 "members": [
                   {
                     "type": "SYMBOL",
@@ -1361,11 +1357,27 @@
                   {
                     "type": "SYMBOL",
                     "name": "output"
+                  },
+                  {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "value"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "output"
+                      }
+                    ]
                   }
                 ]
               }
-            ]
-          }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -1393,8 +1405,72 @@
               "value": "ospf"
             }
           }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "eigrp"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "rip"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "isis"
+            }
+          }
         }
       ]
+    },
+    "eigrp_router_statement": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 2,
+              "content": {
+                "type": "STRING",
+                "value": "eigrp"
+              }
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "arg",
+            "content": {
+              "type": "REPEAT",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_cmd_arg"
+              }
+            }
+          }
+        ]
+      }
     },
     "address_family_section": {
       "type": "PREC_DYNAMIC",

@@ -231,6 +231,10 @@
           "named": true
         },
         {
+          "type": "eigrp_router_statement",
+          "named": true
+        },
+        {
           "type": "eos",
           "named": true
         },
@@ -1477,6 +1481,10 @@
           "named": true
         },
         {
+          "type": "eigrp_router_statement",
+          "named": true
+        },
+        {
           "type": "eos",
           "named": true
         },
@@ -2333,6 +2341,26 @@
   },
   {
     "type": "editing_statement",
+    "named": true,
+    "fields": {
+      "arg": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "eigrp_router_statement",
     "named": true,
     "fields": {
       "arg": {
@@ -4693,6 +4721,10 @@
           "named": true
         },
         {
+          "type": "eigrp_router_statement",
+          "named": true
+        },
+        {
           "type": "eos",
           "named": true
         },
@@ -5097,6 +5129,10 @@
         },
         {
           "type": "editing_statement",
+          "named": true
+        },
+        {
+          "type": "eigrp_router_statement",
           "named": true
         },
         {
@@ -5545,6 +5581,10 @@
         },
         {
           "type": "editing_statement",
+          "named": true
+        },
+        {
+          "type": "eigrp_router_statement",
           "named": true
         },
         {
@@ -6427,6 +6467,10 @@
             "named": true
           },
           {
+            "type": "eigrp_router_statement",
+            "named": true
+          },
+          {
             "type": "escape_character_statement",
             "named": true
           },
@@ -6978,6 +7022,10 @@
           "named": true
         },
         {
+          "type": "eigrp_router_statement",
+          "named": true
+        },
+        {
           "type": "eos",
           "named": true
         },
@@ -7364,6 +7412,10 @@
         },
         {
           "type": "editing_statement",
+          "named": true
+        },
+        {
+          "type": "eigrp_router_statement",
           "named": true
         },
         {
@@ -7872,6 +7924,10 @@
           "named": true
         },
         {
+          "type": "eigrp_router_statement",
+          "named": true
+        },
+        {
           "type": "eos",
           "named": true
         },
@@ -8295,6 +8351,10 @@
           "named": true
         },
         {
+          "type": "eigrp_router_statement",
+          "named": true
+        },
+        {
           "type": "eos",
           "named": true
         },
@@ -8551,7 +8611,7 @@
     "fields": {
       "process_id": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "output",
@@ -8701,6 +8761,10 @@
         },
         {
           "type": "editing_statement",
+          "named": true
+        },
+        {
+          "type": "eigrp_router_statement",
           "named": true
         },
         {
@@ -9532,6 +9596,10 @@
           "named": true
         },
         {
+          "type": "eigrp_router_statement",
+          "named": true
+        },
+        {
           "type": "eos",
           "named": true
         },
@@ -10267,6 +10335,10 @@
     "named": false
   },
   {
+    "type": "eigrp",
+    "named": false
+  },
+  {
     "type": "eos",
     "named": true
   },
@@ -10313,6 +10385,10 @@
   {
     "type": "ios_comment",
     "named": true
+  },
+  {
+    "type": "isis",
+    "named": false
   },
   {
     "type": "kerberos",
@@ -10484,6 +10560,10 @@
   },
   {
     "type": "remote-span",
+    "named": false
+  },
+  {
+    "type": "rip",
     "named": false
   },
   {
