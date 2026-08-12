@@ -14,7 +14,7 @@
     }
   ],
   "metadata": {
-    "version": "0.3.2",
+    "version": "0.4.0",
     "license": "MIT",
     "description": "Tree sitter grammar for the Cisco IOS network Operating System",
     "authors": [
