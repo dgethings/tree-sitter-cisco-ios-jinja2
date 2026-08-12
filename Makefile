@@ -1,6 +1,6 @@
 LANGUAGE_NAME := tree-sitter-cisco-ios-jinja2
 HOMEPAGE_URL := https://github.com/dgethings/tree-sitter-cisco-ios-jinja2
-VERSION := 0.3.0
+VERSION := 0.3.2
 
 # repository
 SRC_DIR := src
