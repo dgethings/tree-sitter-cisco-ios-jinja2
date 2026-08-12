@@ -159,6 +159,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -168,6 +172,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -561,6 +569,26 @@
     }
   },
   {
+    "type": "area_statement",
+    "named": true,
+    "fields": {
+      "arg": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "assignment_statement",
     "named": true,
     "fields": {
@@ -637,6 +665,26 @@
     }
   },
   {
+    "type": "bfd_statement",
+    "named": true,
+    "fields": {
+      "arg": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "block_statement",
     "named": true,
     "fields": {
@@ -687,6 +735,10 @@
         },
         {
           "type": "auto_sync_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -1043,6 +1095,10 @@
         },
         {
           "type": "auto_sync_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -1405,6 +1461,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -1414,6 +1474,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -1862,6 +1926,10 @@
         },
         {
           "type": "auto_sync_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -2433,6 +2501,10 @@
           "named": true
         },
         {
+          "type": "bfd_statement",
+          "named": true
+        },
+        {
           "type": "block_statement",
           "named": true
         },
@@ -2741,6 +2813,10 @@
           },
           {
             "type": "auto_sync_statement",
+            "named": true
+          },
+          {
+            "type": "bfd_statement",
             "named": true
           },
           {
@@ -3181,6 +3257,10 @@
           "named": true
         },
         {
+          "type": "bfd_statement",
+          "named": true
+        },
+        {
           "type": "block_statement",
           "named": true
         },
@@ -3489,6 +3569,10 @@
           },
           {
             "type": "auto_sync_statement",
+            "named": true
+          },
+          {
+            "type": "bfd_statement",
             "named": true
           },
           {
@@ -3815,6 +3899,10 @@
           },
           {
             "type": "auto_sync_statement",
+            "named": true
+          },
+          {
+            "type": "bfd_statement",
             "named": true
           },
           {
@@ -4221,6 +4309,10 @@
           },
           {
             "type": "auto_sync_statement",
+            "named": true
+          },
+          {
+            "type": "bfd_statement",
             "named": true
           },
           {
@@ -4649,6 +4741,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -4658,6 +4754,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -5060,6 +5160,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -5069,6 +5173,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -5512,6 +5620,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -5521,6 +5633,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -5929,6 +6045,10 @@
         },
         {
           "type": "auto_sync_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -6399,6 +6519,10 @@
             "named": true
           },
           {
+            "type": "area_statement",
+            "named": true
+          },
+          {
             "type": "auto_cost_statement",
             "named": true
           },
@@ -6408,6 +6532,10 @@
           },
           {
             "type": "autonomous_system_statement",
+            "named": true
+          },
+          {
+            "type": "bfd_statement",
             "named": true
           },
           {
@@ -6950,6 +7078,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -6959,6 +7091,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -7343,6 +7479,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -7352,6 +7492,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -7852,6 +7996,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -7861,6 +8009,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -8279,6 +8431,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -8288,6 +8444,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -8692,6 +8852,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -8701,6 +8865,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -9524,6 +9692,10 @@
           "named": true
         },
         {
+          "type": "area_statement",
+          "named": true
+        },
+        {
           "type": "auto_cost_statement",
           "named": true
         },
@@ -9533,6 +9705,10 @@
         },
         {
           "type": "autonomous_system_statement",
+          "named": true
+        },
+        {
+          "type": "bfd_statement",
           "named": true
         },
         {
@@ -9924,6 +10100,10 @@
           "named": true
         },
         {
+          "type": "bfd_statement",
+          "named": true
+        },
+        {
           "type": "block_statement",
           "named": true
         },
@@ -10251,6 +10431,10 @@
     "named": false
   },
   {
+    "type": "area",
+    "named": false
+  },
+  {
     "type": "auto-cost",
     "named": false
   },
@@ -10260,6 +10444,10 @@
   },
   {
     "type": "autonomous-system",
+    "named": false
+  },
+  {
+    "type": "bfd",
     "named": false
   },
   {

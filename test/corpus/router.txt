@@ -441,3 +441,35 @@ router eigrp CUSTOMER
       arg: (value))
     (exit_address_family_statement)
     (eos)))
+
+===
+router ospf area statement
+===
+
+router ospf 1
+ area 0 range 10.0.0.0 255.0.0.0
+ area 0 stub
+ no area 0 nssa
+!
+
+---
+
+(config
+  (router_section
+    (router_header
+      protocol: (routing_protocol)
+      process_id: (value))
+    (area_statement
+      arg: (value)
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (area_statement
+      arg: (value)
+      arg: (value))
+    (negated_statement
+      (negation_keyword)
+      keyword: (area_statement
+        arg: (value)
+        arg: (value)))
+    (eos)))
