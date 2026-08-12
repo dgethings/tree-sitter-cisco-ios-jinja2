@@ -116,3 +116,28 @@ interface GigabitEthernet0/0
     (mtu_statement
       size: (output))
     (eos)))
+
+===
+interface bfd statement
+===
+
+interface GigabitEthernet0/0
+ bfd interval 200 200 200
+ no bfd
+!
+
+---
+
+(config
+  (interface_section
+    (interface_header
+      name: (interface_name))
+    (bfd_statement
+      arg: (value)
+      arg: (value)
+      arg: (value)
+      arg: (value))
+    (negated_statement
+      (negation_keyword)
+      keyword: (bfd_statement))
+    (eos)))

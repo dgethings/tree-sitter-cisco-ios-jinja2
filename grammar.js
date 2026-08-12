@@ -152,6 +152,7 @@ export default grammar({
       $.summary_prefix_statement,
       $.default_information_statement,
       $.distribute_list_statement,
+      $.area_statement,
       $.eigrp_router_statement,
       $.snmp_server_statement,
       $.scheduler_statement,
@@ -165,6 +166,7 @@ export default grammar({
       $.boot_statement,
       $.tacacs_server_statement,
       $.parser_statement,
+      $.bfd_statement,
       // --- config-line rich rules (see comment block above `negated_statement`)
       $.exec_timeout_statement,
       $.login_statement,
@@ -356,6 +358,7 @@ export default grammar({
         $.boot_statement,
         $.tacacs_server_statement,
         $.parser_statement,
+        $.bfd_statement,
         // --- config-line rich rules (mirror the entries in `_command`)
         $.exec_timeout_statement,
         $.login_statement,
@@ -826,7 +829,9 @@ export default grammar({
     //   router-id, exit-address-family, metric-style, graceful-restart,
     //   queue-depth, compatible, auto-cost, aggregate-address, af-interface,
     //   autonomous-system, maximum-prefix, summary-prefix,
-    //   default-information, distribute-list.
+    //   default-information, distribute-list, area (OSPF-exclusive).
+    //   (`bfd` is multi-mode and lives with the global rich rules — see
+    //   `bfd_statement`.)
     //
     // DEFERRED:
     //   * `bgp ...` sub-commands (bgp bestpath, bgp cluster-id, ...) — `bgp`
@@ -841,9 +846,20 @@ export default grammar({
     //     eigrp was promoted to a routing_protocol keyword for
     //     `router eigrp`). RIP / IS-IS have no `<proto> ...` sub-commands and
     //     need no matching rule.
-    //   * `timers`, `mpls`, `area`, `distance`, `bfd` — multi-mode
-    //     collision risk (several also appear in config-if / config-line /
-    //     global); revisit as generic rules once this batch is confirmed.
+    //   * `timers`, `mpls` — multi-mode collision risk (config-if /
+    //     config-line / global); revisit as generic rules once a verified-safe
+    //     batch lands.
+    //   * `distance` — INTENTIONALLY left deferred (multi-protocol: appears
+    //     under router bgp/eigrp/ospf/isis AND global). A generic
+    //     `distance_statement` would be lexer-safe (generic tail catches every
+    //     form) but adds NO protocol discrimination — it is a shared command, so
+    //     the consumer (chunter protocol-mismatch) must NOT key on it (it would
+    //     false-positive). The keyword-text registry (`distance -> <proto>`) the
+    //     consumer uses today is the correct mechanism; a dedicated node kind
+    //     here would only invite misuse. Documented-deferred per main-cz8.
+    //     `area` and `bfd` were promoted OUT of this bullet — see
+    //     `area_statement` (router-ospf) and `bfd_statement` (global rich
+    //     rules).
     //   * `ip ...` router commands (e.g. `ip prefix-list`, `ip route` inside
     //     a router) — same lexer-commit trap as the config-if `ip address`
     //     rule documented above: promoting `ip` breaks every other
@@ -926,6 +942,33 @@ export default grammar({
     )),
     distribute_list_statement: $ => prec.right(seq(
       token(prec(2, "distribute-list")),
+      field("arg", repeat($._cmd_arg)),
+    )),
+    // `area` — OSPF-exclusive inside router bodies (area <id>
+    // range|stub|nssa|authentication|virtual-link|default-cost ...). The
+    // highest-value keyword of the deferred batch: a dedicated `area_statement`
+    // gives the consumer (chunter protocol-mismatch) a stable node kind to key
+    // OSPF on, instead of matching leading-token text.
+    //
+    // LANDED (not deferred): unlike `ip`/`mpls` it is single-mode as a LEADING
+    // token (router-ospf only), so promoting it cannot change how any OTHER
+    // mode's lines parse. Wired into `_command` only (matches the
+    // neighbor/network pattern); a hypothetical top-level `area ...` is not a
+    // valid global command and — because `area` is only a valid symbol inside a
+    // section body — lexes back to `identifier` there and falls through to
+    // `command_line`, so there is no cross-mode regression (verified).
+    //
+    // MID-LINE COLLISION (the `network ... area <id>` case): promoting `area`
+    // does NOT break `network 10.0.0.0 0.0.0.255 area 0`. tree-sitter's lexer is
+    // valid-symbol driven: at the arg position inside `network_statement`'s
+    // `repeat($._cmd_arg)` the only valid symbols are `_cmd_arg`'s members
+    // (`value`/`output`/aliases) — `area` is NOT among them — so `area` lexes
+    // as `value` and stays inside `network_statement`. No `_cmd_arg` alias is
+    // needed (unlike the section keywords `route-map`/`class-map`, which DO
+    // need aliasing because they can open a sibling section mid-body). Verified
+    // against the corpus `network ... area 0` cases (zero new errors).
+    area_statement: $ => prec.right(seq(
+      token(prec(2, "area")),
       field("arg", repeat($._cmd_arg)),
     )),
 
@@ -1026,6 +1069,24 @@ export default grammar({
     )),
     parser_statement: $ => prec.right(seq(
       token(prec(2, "parser")),
+      field("arg", repeat($._cmd_arg)),
+    )),
+    // `bfd` — multi-mode (global `bfd`/`bfd template`, config-if `bfd
+    // interval`/`bfd echo`, router `bfd all-interfaces`). This is the deliberate
+    // MULTI-MODE exception to the single-mode rule above: a named
+    // `bfd_statement` node gives the consumer a stable node kind across all
+    // three modes. (The consumer must NOT treat it as protocol-exclusive — bfd
+    // is MODE-discriminating, not protocol-discriminating.)
+    //
+    // SAFETY: the generic `repeat(arg)` tail means every `bfd ...` line parses,
+    // so promoting `bfd` can never orphan a sibling line in any mode. `bfd` does
+    // not appear as a MID-LINE token in any IOS command, so no `_cmd_arg` alias
+    // is required (contrast `area`, which DOES appear mid-line in
+    // `network ... area` but is still safe — see `area_statement`). Wired into
+    // BOTH `_command` (section bodies + negation) and `_ios_statement` (so a
+    // top-level/global `bfd ...` parses as `bfd_statement`, not `command_line`).
+    bfd_statement: $ => prec.right(seq(
+      token(prec(2, "bfd")),
       field("arg", repeat($._cmd_arg)),
     )),
 

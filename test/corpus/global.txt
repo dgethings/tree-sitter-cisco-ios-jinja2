@@ -159,3 +159,27 @@ scheduler allocate {{ interrupt }} {{ process }}
     arg: (value)
     arg: (output)
     arg: (output)))
+
+===
+bfd global rich statement
+===
+
+bfd
+bfd interval 300 600 1
+no bfd echo
+!
+
+---
+
+(config
+  (bfd_statement)
+  (bfd_statement
+    arg: (value)
+    arg: (value)
+    arg: (value)
+    arg: (value))
+  (negated_statement
+    (negation_keyword)
+    keyword: (bfd_statement
+      arg: (value)))
+  (eos))

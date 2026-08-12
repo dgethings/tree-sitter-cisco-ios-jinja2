@@ -300,6 +300,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "area_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "eigrp_router_statement"
         },
         {
@@ -349,6 +353,10 @@
         {
           "type": "SYMBOL",
           "name": "parser_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "bfd_statement"
         },
         {
           "type": "SYMBOL",
@@ -890,6 +898,10 @@
         {
           "type": "SYMBOL",
           "name": "parser_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "bfd_statement"
         },
         {
           "type": "SYMBOL",
@@ -2789,6 +2801,37 @@
         ]
       }
     },
+    "area_statement": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 2,
+              "content": {
+                "type": "STRING",
+                "value": "area"
+              }
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "arg",
+            "content": {
+              "type": "REPEAT",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_cmd_arg"
+              }
+            }
+          }
+        ]
+      }
+    },
     "snmp_server_statement": {
       "type": "PREC_RIGHT",
       "value": 0,
@@ -3144,6 +3187,37 @@
               "content": {
                 "type": "STRING",
                 "value": "parser"
+              }
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "arg",
+            "content": {
+              "type": "REPEAT",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_cmd_arg"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "bfd_statement": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 2,
+              "content": {
+                "type": "STRING",
+                "value": "bfd"
               }
             }
           },
