@@ -157,7 +157,7 @@ bd close <id>         # Complete work
 - Run `bd prime` for detailed command reference and session close protocol
 - Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
+**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See <https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md> for details and anti-patterns.
 
 ## Session Completion
 
@@ -171,22 +171,27 @@ authoritative "Workflow" section above — **do not push to `main` directly**).
 2. **Run quality gates** (if code changed) - Tests, linters, builds (e.g. `make test`)
 3. **Update issue status** - Close finished work, update in-progress items
 4. **OPEN & MERGE A PULL REQUEST** - This is MANDATORY (never push straight to `main`):
+
    ```bash
    git push -u origin HEAD                # push your feature branch
    gh pr create --fill                    # open the PR
    gh pr merge --squash --delete-branch   # after CI is green
    ```
+
 5. **Clean up** - Return to the main worktree, remove the feature worktree,
    refresh `main`:
+
    ```bash
    wt switch main
    wt remove <branch>
    git pull
    ```
+
 6. **Verify** - The PR is merged and `main` is up to date locally
 7. **Hand off** - Provide context for next session
 
 **CRITICAL RULES:**
+
 - Work is NOT complete until the **PR is merged** to `main`
 - NEVER push directly to `main` — always open a PR
 - NEVER say "ready to push when you are" - YOU open and merge the PR
