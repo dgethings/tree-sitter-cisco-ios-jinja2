@@ -1,0 +1,1 @@
+{ "format": { "enabled": false }, "ignore": [ "src/**", "bindings/c/**", "bindings/node/binding.cc", "bindings/python/tree_sitter_cisco_ios_jinja2/binding.c" ] }
