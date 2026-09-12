@@ -11,11 +11,11 @@ function sep1(rule, separator) {
 }
 
 function statement_start() {
-  return alias(/\{\%[\+\-]?/, "statement_start");
+  return alias(/\{%[+-]?/, "statement_start");
 }
 
 function statement_end() {
-  return alias(/[\+\-]?\%\}/, "statement_end");
+  return alias(/[+-]?%\}/, "statement_end");
 }
 
 /**
@@ -280,7 +280,7 @@ export default grammar({
       )),
     ),
 
-    interface_name: $ => /[A-Za-z0-9_\/.\-]+/,
+    interface_name: $ => /[A-Za-z0-9_/.-]+/,
 
     // text excludes `!`, `{`, and `\n` so each token stays within a single
     // line — without the `\n` exclusion this catch-all would greedily swallow
@@ -301,7 +301,7 @@ export default grammar({
       prec.right(
         repeat1(choice(
           token(prec(-1, /\{/)),
-          token(prec(1, /[^!\{\n\w\s][^!\{\n]*/)),
+          token(prec(1, /[^!{\n\w\s][^!{\n]*/)),
         )),
       ),
 
@@ -310,14 +310,14 @@ export default grammar({
     // Requires at least `! +<something>` (so a bare `!` still goes to `eos`);
     // given a real comment body, the longer match wins over `eos`.
     ios_comment: _ => token(prec(2, /! +[^\n]+/)),
-    j2_comment: _ => seq("{#", repeat(/[^\#]+|[\#]/), "#}"),
+    j2_comment: _ => seq("{#", repeat(/[^#]+|[#]/), "#}"),
     comment: $ => choice($.ios_comment, $.j2_comment),
 
     output: $ =>
       seq("{{", optional($._output_code), "}}"),
-    _output_code: _ => prec.right(repeat1(/[^\s\}\-\+]+|[\}\-\+]/)),
+    _output_code: _ => prec.right(repeat1(/[^\s}\-+]+|[}\-+]/)),
 
-    _expression_in_statement: _ => repeat1(/[^\s\%\-\+]+|[\%\-\+]/),
+    _expression_in_statement: _ => repeat1(/[^\s%\-+]+|[%\-+]/),
 
     // Top-level dispatch for IOS statements. This mirrors the rich-rule
     // portion of `_command` (used inside section bodies and inside
@@ -1648,8 +1648,8 @@ export default grammar({
 
     identifier: () => /[\w]+/,
 
-    string: () => choice(seq(`"`, /[^\"]+/, `"`), seq(`'`, /[^\']+/, `'`)),
+    string: () => choice(seq(`"`, /[^"]+/, `"`), seq(`'`, /[^']+/, `'`)),
 
-    value: _ => token(prec(1, /[a-zA-Z0-9\.\-\/:,]+/)),
+    value: _ => token(prec(1, /[a-zA-Z0-9.\-/:,]+/)),
   }
 });

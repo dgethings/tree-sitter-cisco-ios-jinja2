@@ -54,7 +54,7 @@ TYPE_LEVEL = {"feat": 2, "perf": 2, "fix": 1}
 LEVEL_NAME = {0: "none", 1: "patch", 2: "minor", 3: "major"}
 
 
-def die(msg: str) -> "None":
+def die(msg: str) -> None:
     print(f"version_gate: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
