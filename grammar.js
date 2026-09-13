@@ -853,7 +853,7 @@ export default grammar({
     //     under router bgp/eigrp/ospf/isis AND global). A generic
     //     `distance_statement` would be lexer-safe (generic tail catches every
     //     form) but adds NO protocol discrimination — it is a shared command, so
-    //     the consumer (chunter protocol-mismatch) must NOT key on it (it would
+    //     the consumer (chunt protocol-mismatch) must NOT key on it (it would
     //     false-positive). The keyword-text registry (`distance -> <proto>`) the
     //     consumer uses today is the correct mechanism; a dedicated node kind
     //     here would only invite misuse. Documented-deferred per main-cz8.
@@ -947,7 +947,7 @@ export default grammar({
     // `area` — OSPF-exclusive inside router bodies (area <id>
     // range|stub|nssa|authentication|virtual-link|default-cost ...). The
     // highest-value keyword of the deferred batch: a dedicated `area_statement`
-    // gives the consumer (chunter protocol-mismatch) a stable node kind to key
+    // gives the consumer (chunt protocol-mismatch) a stable node kind to key
     // OSPF on, instead of matching leading-token text.
     //
     // LANDED (not deferred): unlike `ip`/`mpls` it is single-mode as a LEADING
